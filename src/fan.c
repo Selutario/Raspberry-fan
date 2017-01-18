@@ -25,18 +25,16 @@ int main(int argc, char *argv[])
 		if(PID == 0){
 			close(fd[0]);
 
-			dup2(fd, STDOUT_FILENO);
+			dup2(fd[1], STDOUT_FILENO);
 			system("sensors | grep -m 1 temp1 | cut -d\" \" -f9 | cut -d\"+\" -f2 | cut -c 1-2"); // mejor system("source - el script")
 		}
 		else{
-			if( (fd = open(FIFO, O_RDONLY, 0777)) < 0){
-				printf("Se ha producido un error al intentar abrir el archivo fifo.\n");
-				exit(-1);
-			}
+			close(fd[1]);
+			dup2(fd[0], STDIN_FILENO);
 
-			read(fd, buffer, 4);
+			read(fd[0], buffer, 4);
 			sscanf(buffer, "%d", &temp); // MEJOR STRTOL
-			fflush(stdin);
+			//fflush(stdin);
 
 			if(temp < 40)
 				printf("La temperatura es buena (%d).\n", temp);
