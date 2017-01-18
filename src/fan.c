@@ -23,18 +23,23 @@ int main(int argc, char *argv[])
 
 	while(1){
 		if(PID == 0){
+			// Cierra descriptor de archivo de lectura
 			close(fd[0]);
 
+			// Duplica el de escritura en el fd restante (y cierra el original)
 			dup2(fd[1], STDOUT_FILENO);
 			system("sensors | grep -m 1 temp1 | cut -d\" \" -f9 | cut -d\"+\" -f2 | cut -c 1-2"); // mejor system("source - el script")
 		}
 		else{
+
+			// Cierra descriptor de archivo de escritura
 			close(fd[1]);
+
+			// Duplica el de lectura en el fd restante (y cierra el original)
 			dup2(fd[0], STDIN_FILENO);
 
 			read(fd[0], buffer, 4);
 			sscanf(buffer, "%d", &temp); // MEJOR STRTOL
-			//fflush(stdin);
 
 			if(temp < 40)
 				printf("La temperatura es buena (%d).\n", temp);
