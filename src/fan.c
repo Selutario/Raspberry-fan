@@ -10,26 +10,23 @@
 
 int main(int argc, char *argv[])
 {
-	int fd,
-		temp;
+	int fd[2], temp;
 	pid_t PID;
 	char buffer[4];
-	mkfifo(FIFO, 0777);
+
+	pipe(fd);
 
 	if( (PID=fork()) < 0){
-		perror("\nError en fork");
+		perror("\nError en fork.");
 		exit(-1);
 	}
 
 	while(1){
 		if(PID == 0){
-			if( (fd = open(FIFO, O_RDWR, 0777)) < 0){
-				printf("Se ha producido un error al intentar abrir el archivo fifo.\n");
-				exit(-1);
-			}
+			close(fd[0]);
 
 			dup2(fd, STDOUT_FILENO);
-			system("./temp-fan.sh"); // mejor system("source - el script")
+			system("sensors | grep -m 1 temp1 | cut -d\" \" -f9 | cut -d\"+\" -f2 | cut -c 1-2"); // mejor system("source - el script")
 		}
 		else{
 			if( (fd = open(FIFO, O_RDONLY, 0777)) < 0){
