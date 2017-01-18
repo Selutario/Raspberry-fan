@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 			}
 
 			dup2(fd, STDOUT_FILENO);
-			system("./temp-fan.sh"); // mejor system("source - el script")
+			system("source sensors | grep -m 1 temp1 | cut -d\" \" -f9 | cut -d\"+\" -f2 | cut -c 1-2");
 		}
 		else{
 			if( (fd = open(FIFO, O_RDONLY, 0777)) < 0){
