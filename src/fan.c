@@ -49,17 +49,19 @@ int main(int argc, char *argv[])
 
 			sscanf(buffer, "%d", &temp); // MEJOR STRTOL
 
-			if(temp < 50)
-				printf("La temperatura es buena (%d).\n", temp);
-			else if(temp < 55){
+			if(temp < 58){
 				printf("La temperatura es media (%d).\n", temp);
-					if(fan_on)
+					if(fan_on && 55 < temp ){
 						fan_on = false;
+						printf("Apagar ventilador\n");
+					}
 			}
-			else if(58 < temp){
+			else{
 				printf("La temperatura es alta (%d).\n", temp);
-				if(!fan_on)
+				if(!fan_on){
 					fan_on = true;
+					printf("Encender ventilador\n");
+				}
 			}
 		}
 
