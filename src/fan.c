@@ -6,10 +6,9 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#define FIFO "datos"
-
 int main(int argc, char *argv[])
 {
+	bool fan_on = false;
 	int fd[2], temp;
 	pid_t PID;
 	char buffer[4];
@@ -41,12 +40,18 @@ int main(int argc, char *argv[])
 			read(fd[0], buffer, 4);
 			sscanf(buffer, "%d", &temp); // MEJOR STRTOL
 
-			if(temp < 40)
+			if(temp < 50)
 				printf("La temperatura es buena (%d).\n", temp);
-			else if(temp < 45)
+			else if(temp < 55){
 				printf("La temperatura es media (%d).\n", temp);
-			else
+					if(fan_on)
+						fan_on = false;
+			}
+			else if(58 < temp){
 				printf("La temperatura es alta (%d).\n", temp);
+				if(!fan_on)
+					fan_on = true;
+			}
 		}
 
 		sleep(5);
