@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <errno.h>
 
+#define temp_encender 60
+#define temp_apagar 56
+
 int main(int argc, char *argv[])
 {
 	bool fan_on = false;
@@ -39,7 +42,7 @@ int main(int argc, char *argv[])
 			dup2(fd[1], STDOUT_FILENO);
 
 			 // mejor system("source - el script")
-			if(system("sensor | grep -m 1 temp1 | cut -d\" \" -f9 | cut -d\"+\" -f2 | cut -c 1-2") < 0)
+			if(system("sensors | grep -m 1 temp1 | cut -d\" \" -f9 | cut -d\"+\" -f2 | cut -c 1-2") < 0)
 				perror("Se ha producido un error al consultar la temperatura.\n");
 		}	
 		else{
@@ -59,10 +62,10 @@ int main(int argc, char *argv[])
 				exit(EXIT_FAILURE);
 			}
 
-			if(temp < 58){
+			if(temp < temp_encender){
 				printf("La temperatura es media (%d).\n", temp);
 
-					if(fan_on && 55 > temp ){
+					if(fan_on && temp_apagar > temp ){
 						fan_on = false;
 						printf("Apagar ventilador\n");
 					}
