@@ -1,4 +1,5 @@
 #include <sys/types.h>
+#include <wait.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -15,7 +16,6 @@ int main(int argc, char *argv[])
 	int fd[2], errfi = 0, temp;
 	pid_t PID;
 	char buffer[4];
-	char *ptr;
 
 	// REDIRIGIR SALIDA DE ERROR A ARCHIVO 
 	if((errfi=open("../fan-error.txt", O_CREAT|O_WRONLY, 0777)) < 0)
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 			if(read(fd[0], buffer, 4) < 0)
 				perror("Se ha producido un error al leer la temperatura.\n");
 
-			temp = strtol(buffer, &ptr, 10);
+			temp = strtol(buffer, NULL, 10);
 			if(temp == 0 ){
 				perror("Error en strtol de temp");
 				exit(EXIT_FAILURE);
@@ -81,6 +81,8 @@ int main(int argc, char *argv[])
 
 		sleep(5);
 	}
+
+	wait(NULL);
 }
 
 //buscar en kerrisk 479 timers and sleeping
