@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 	char *ptr;
 
 	// REDIRIGIR SALIDA DE ERROR A ARCHIVO 
-	if((errfi=open("~/fan-error.txt", O_CREAT|O_RDWR, 0777)) < 0)
+	if((errfi=open("../fan-error.txt", O_CREAT|O_WRONLY, 0777)) < 0)
 		printf("Se ha producido un error en la creación de registro de errores. No se podrán almacenar.\n");
 	
 	dup2(errfi, STDERR_FILENO);
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 			dup2(fd[1], STDOUT_FILENO);
 
 			 // mejor system("source - el script")
-			if(system("sensors | grep -m 1 temp1 | cut -d\" \" -f9 | cut -d\"+\" -f2 | cut -c 1-2") < 0)
+			if(system("sensor | grep -m 1 temp1 | cut -d\" \" -f9 | cut -d\"+\" -f2 | cut -c 1-2") < 0)
 				perror("Se ha producido un error al consultar la temperatura.\n");
 		}	
 		else{

@@ -4,4 +4,5 @@ principal:
 
 clean: 
 	rm bin/raspberry-fan
+	rm ./fan-error.txt
 	@	echo ">> Directory clean."	
