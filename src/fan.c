@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
 	int fd[2], errfi, temp;
 	pid_t PID;
 	char buffer[4];
+	char *ptr;
 
 	// REDIRIGIR SALIDA DE ERROR A ARCHIVO 
 	if((errfi=open("~/fan-error.txt", O_CREAT|O_RDWR, 0777)) < 0)
@@ -52,7 +53,7 @@ int main(int argc, char *argv[])
 			if(read(fd[0], buffer, 4) < 0)
 				perror("Se ha producido un error al leer la temperatura.\n");
 
-			sscanf(buffer, "%d", &temp); // MEJOR STRTOL
+			temp = strtol(buffer, &ptr, 10);
 
 			if(temp < 58){
 				printf("La temperatura es media (%d).\n", temp);
