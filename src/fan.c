@@ -9,9 +9,11 @@
 int main(int argc, char *argv[])
 {
 	bool fan_on = false;
-	int fd[2], temp;
+	int fd[2];
 	pid_t PID;
 	char buffer[4];
+	int temp;
+	char *ptr;
 
 	if(pipe(fd) < 0){
 		perror("Se ha producido un error al intentar generar el cauce\n");
@@ -47,7 +49,7 @@ int main(int argc, char *argv[])
 			if(read(fd[0], buffer, 4) < 0)
 				perror("Se ha producido un error al leer la temperatura.\n");
 
-			sscanf(buffer, "%d", &temp); // MEJOR STRTOL
+			temp = strtol(buffer, &ptr, 10);
 
 			if(temp < 58){
 				printf("La temperatura es media (%d).\n", temp);
