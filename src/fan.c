@@ -9,15 +9,17 @@
 int main(int argc, char *argv[])
 {
 	bool fan_on = false;
-	int fd[2], temp;
+	int fd[2], errfi, temp;
 	pid_t PID;
 	char buffer[4];
+
+	// REDIRIGIR SALIDA DE ERROR A ARCHIVO 
+	dup2(errfi, STDERR_FILENO);
 
 	if(pipe(fd) < 0){
 		perror("Se ha producido un error al intentar generar el cauce\n");
 		exit(-1);
 	}
-
 
 	if( (PID=fork()) < 0){
 		perror("\nError en fork.");
@@ -51,7 +53,7 @@ int main(int argc, char *argv[])
 
 			if(temp < 58){
 				printf("La temperatura es media (%d).\n", temp);
-					if(fan_on && 55 < temp ){
+					if(fan_on && (55 > temp) ){
 						fan_on = false;
 						printf("Apagar ventilador\n");
 					}
