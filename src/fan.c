@@ -9,7 +9,7 @@
 int main(int argc, char *argv[])
 {
 	bool fan_on = false;
-	int fd[2], errfi, temp;
+	int fd[2], errfi = 0, temp;
 	pid_t PID;
 	char buffer[4];
 	char *ptr;
@@ -22,12 +22,12 @@ int main(int argc, char *argv[])
 
 	if(pipe(fd) < 0){
 		perror("Se ha producido un error al intentar generar el cauce\n");
-		exit(-1);
+		exit(EXIT_FAILURE);
 	}
 
 	if( (PID=fork()) < 0){
 		perror("\nError en fork.");
-		exit(-1);
+		exit(EXIT_FAILURE);
 	}
 
 	while(1){
@@ -54,6 +54,10 @@ int main(int argc, char *argv[])
 				perror("Se ha producido un error al leer la temperatura.\n");
 
 			temp = strtol(buffer, &ptr, 10);
+			if(temp == 0 ){
+				perror("Error en strtol de temp");
+				exit(EXIT_FAILURE);
+			}
 
 			if(temp < 58){
 				printf("La temperatura es media (%d).\n", temp);
