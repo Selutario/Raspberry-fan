@@ -15,6 +15,9 @@ int main(int argc, char *argv[])
 	char *ptr;
 
 	// REDIRIGIR SALIDA DE ERROR A ARCHIVO 
+	if((errfi=open("~/fan-error.txt", O_CREAT|O_RDWR, 0777)) < 0)
+		printf("Se ha producido un error en la creación de registro de errores. No se podrán almacenar.\n");
+	
 	dup2(errfi, STDERR_FILENO);
 
 	if(pipe(fd) < 0){
