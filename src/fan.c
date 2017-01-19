@@ -9,11 +9,12 @@
 
 #define temp_encender 60
 #define temp_apagar 56
+#define comprobar_cada 5
 
 int main(int argc, char *argv[])
 {
 	bool fan_on = false;
-	int fd[2], errfi = 0, temp;
+	int temp, fd[2], errfi = -1;
 	pid_t PID;
 	char buffer[4];
 
@@ -79,7 +80,7 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		sleep(5);
+		sleep(comprobar_cada);
 	}
 
 	wait(NULL);
