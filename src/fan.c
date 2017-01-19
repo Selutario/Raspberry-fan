@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
 			if(temp < 58){
 				printf("La temperatura es media (%d).\n", temp);
-					if(fan_on && 55 < temp ){
+					if(fan_on && 55 > temp ){
 						fan_on = false;
 						printf("Apagar ventilador\n");
 					}
