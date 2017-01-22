@@ -1,6 +1,7 @@
 #include <sys/types.h>
-#include <wait.h>
 #include <sys/stat.h>
+#include <wiringPi.h>
+#include <wait.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -19,10 +20,16 @@ int main(int argc, char *argv[])
 	char buffer[4];
 
 	// REDIRIGIR SALIDA DE ERROR A ARCHIVO 
-	if((errfi=open("../fan-error.txt", O_CREAT|O_WRONLY, 0777)) < 0)
+	//###################################################################
+	if((errfi=open("../fan-error.txt", O_CREAT|O_WRONLY|O_APPEND, 0777)) < 0)
 		printf("Se ha producido un error en la creación de registro de errores. No se podrán almacenar.\n");
 	
 	dup2(errfi, STDERR_FILENO);
+	//###################################################################
+
+	// Setup de salida GPIO
+	wiringPiSetup () ;
+	pinMode (4, OUTPUT) ;
 
 	if(pipe(fd) < 0){
 		perror("Se ha producido un error al intentar generar el cauce\n");
@@ -69,6 +76,7 @@ int main(int argc, char *argv[])
 					if(fan_on && temp_apagar > temp ){
 						fan_on = false;
 						printf("Apagar ventilador\n");
+						digitalWrite (4, LOW) ;	// Off
 					}
 			}
 			else{
@@ -76,6 +84,7 @@ int main(int argc, char *argv[])
 				if(!fan_on){
 					fan_on = true;
 					printf("Encender ventilador\n");
+					digitalWrite (4, HIGH) ;	// On
 				}
 			}
 		}
