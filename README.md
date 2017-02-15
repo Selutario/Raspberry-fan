@@ -14,7 +14,7 @@
 2) Modify the route where specified with the one of your folder (Write "pwd" on shell inside the folder to meet it).
 3) Write "make" (without the quotes) on Raspberry-fan/ (you will need g++ compiler installed).
 4) Write on shell: sudo nano /etc/init.d/fan-init
-5) Paste this: 
+5) Paste and save this: 
     
     <code>
         #! /bin/sh
