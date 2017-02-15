@@ -10,26 +10,32 @@
 
 #define temp_encender 60
 #define temp_apagar 56
-#define comprobar_cada 5
+#define comprobar_cada 10
+
+// NO MODIFIQUE ESTO SI NO ESTÁ SEGURO DE COMO HACERLO
+#define PIN 4 // - > Numeración BCM; | Pin 7 en numeración BOARD
+
 
 int main(int argc, char *argv[])
 {
 	bool fan_on = false;
 	int temp, fd[2], errfi = -1;
 	pid_t PID;
-	char buffer[4];
+	char buffer[5];
 
 	// REDIRIGIR SALIDA DE ERROR A ARCHIVO 
 	//###################################################################
-	if((errfi=open("../fan-error.txt", O_CREAT|O_WRONLY|O_APPEND, 0777)) < 0)
-		printf("Se ha producido un error en la creación de registro de errores. No se podrán almacenar.\n");
+	
+	// Editar ruta
+	if((errfi=open("/home/osmc/Propios/Raspberry-fan/fan-error.txt", O_CREAT|O_WRONLY|O_APPEND, 0777)) < 0)
+		printf("Se ha producido un error en la creación de registro de errores. No se podrán almacenar.\n\n");
 	
 	dup2(errfi, STDERR_FILENO);
 	//###################################################################
 
 	// Setup de salida GPIO
-	wiringPiSetup () ;
-	pinMode (4, OUTPUT) ;
+	wiringPiSetupGpio() ;
+	pinMode(PIN, OUTPUT) ;
 
 	if(pipe(fd) < 0){
 		perror("Se ha producido un error al intentar generar el cauce\n");
@@ -50,7 +56,7 @@ int main(int argc, char *argv[])
 			dup2(fd[1], STDOUT_FILENO);
 
 			 // mejor system("source - el script")
-			if(system("sensors | grep -m 1 temp1 | cut -d\" \" -f9 | cut -d\"+\" -f2 | cut -c 1-2") < 0)
+			if(system("/opt/vc/bin/vcgencmd measure_temp | cut -d\"=\" -f2 | cut -d\"'\" -f1") < 0)
 				perror("Se ha producido un error al consultar la temperatura.\n");
 		}	
 		else{
@@ -61,7 +67,7 @@ int main(int argc, char *argv[])
 			// Duplica el de lectura en el fd restante (y cierra el original)
 			dup2(fd[0], STDIN_FILENO);
 
-			if(read(fd[0], buffer, 4) < 0)
+			if(read(fd[0], buffer, 5) < 0)
 				perror("Se ha producido un error al leer la temperatura.\n");
 
 			temp = strtol(buffer, NULL, 10);
@@ -71,20 +77,15 @@ int main(int argc, char *argv[])
 			}
 
 			if(temp < temp_encender){
-				printf("La temperatura es media (%d).\n", temp);
-
 					if(fan_on && temp_apagar > temp ){
 						fan_on = false;
-						printf("Apagar ventilador\n");
-						digitalWrite (4, LOW) ;	// Off
+						digitalWrite (PIN, LOW) ;	// Off
 					}
 			}
 			else{
-				printf("La temperatura es alta (%d).\n", temp);
 				if(!fan_on){
 					fan_on = true;
-					printf("Encender ventilador\n");
-					digitalWrite (4, HIGH) ;	// On
+					digitalWrite (PIN, HIGH) ;	// On
 				}
 			}
 		}
@@ -94,5 +95,3 @@ int main(int argc, char *argv[])
 
 	wait(NULL);
 }
-
-//buscar en kerrisk 479 timers and sleeping
