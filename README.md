@@ -20,7 +20,7 @@
 
 5) Paste and save this: 
     
-    <code>
+    
         #! /bin/sh
         # /etc/init.d/fan-init
         
@@ -51,7 +51,7 @@
         esac
         
         exit 0
-    </code>
+   
 
 6) Write: sudo chmod 755 /etc/init.d/fan-init
 
