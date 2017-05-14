@@ -25,7 +25,7 @@
 
         [Service]
         Type=simple
-        ExecStart=<span style="color:red">EDIT-WITH-FULL-ROUTE-TO-YOUR-EXECUTABLE*</span> start
+        ExecStart=EDIT-WITH-FULL-ROUTE-TO-YOUR-EXECUTABLE* start
         Restart=Always
         TimeoutStopSec=300
 
