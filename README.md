@@ -20,21 +20,19 @@
 
 5) Paste and save this: 
 
-    <code>
-    [Unit]<br>
-    Description=Turn on/off the fan depending on the temperature.
+        [Unit]
+        Description=Turn on/off the fan depending on the temperature.
 
-    [Service]<br>
-    Type=simple
-    ExecStart=<span style="color:red">EDIT-WITH-FULL-ROUTE-TO-YOUR-EXECUTABLE*</span> start<br>
-    Restart=Always<br>
-    TimeoutStopSec=300
+        [Service]
+        Type=simple
+        ExecStart=<span style="color:red">EDIT-WITH-FULL-ROUTE-TO-YOUR-EXECUTABLE*</span> start
+        Restart=Always
+        TimeoutStopSec=300
 
-    [Install]<br>
-    WantedBy=multi-user.target
-    </code>
+        [Install]
+        WantedBy=multi-user.target
 
-*Example 
+*Example: ExecStart=/home/osmc/Propios/Raspberry-fan/bin/raspberry-fan start
 
 6) Write: sudo chmod 755 /etc/systemd/system/ventilador.service
 
