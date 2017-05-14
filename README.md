@@ -14,50 +14,31 @@
 
 2) Modify the route where specified with the one of your folder (Write "pwd" on shell inside the folder to meet it).
 
-3) Write "make" (without the quotes) on Raspberry-fan/ (you will need g++ compiler installed).
+3) Write "make" (without the quotes) on Raspberry-fan/ (you will need gcc compiler installed).
 
-4) Write on shell: sudo nano /etc/init.d/fan-init
+4) Write on shell: sudo nano /etc/systemd/system/fan.service
 
 5) Paste and save this: 
-    
-    
-        #! /bin/sh
-        # /etc/init.d/fan-init
-        
-        ### BEGIN INIT INFO
-        # Provides:          fan-init
-        # Required-Start:    $all
-        # Required-Stop:     $remote_fs $syslog
-        # Default-Start:     2 3 4 5
-        # Default-Stop:      0 1 6
-        # Short-Description: Script for fan
-        # Description:       Script for fan
-        ### END INIT INFO
-        
-        case "$1" in
-        start)
-            echo "Starting fan-init"
-            # MODIFY THE ROUTE HERE (WRITE pwd ON Raspberry-fan/. TO MEET IT). KEEP sudo WORD
-            sudo /home/osmc/Propios/Raspberry-fan/bin/raspberry-fan
-            ;;
-        stop)
-            echo "Stopping fan-init"
-        
-            ;;
-        *)
-            echo "How to use it: /etc/init.d/fan-init {start|stop}"
-            exit 1
-            ;;
-        esac
-        
-        exit 0
-   
 
-6) Write: sudo chmod 755 /etc/init.d/fan-init
+    <code>
+    [Unit]<br>
+    Description=Turn on/off the fan depending on the temperature.
 
-7) Write: sudo /etc/init.d/fan-init start
+    [Service]<br>
+    Type=simple
+    ExecStart=<span style="color:red">EDIT-WITH-FULL-ROUTE-TO-YOUR-EXECUTABLE*</span> start<br>
+    Restart=Always<br>
+    TimeoutStopSec=300
 
-8) Write: sudo update-rc.d fan-init defaults
+    [Install]<br>
+    WantedBy=multi-user.target
+    </code>
+
+*Example 
+
+6) Write: sudo chmod 755 /etc/systemd/system/ventilador.service
+
+7) Write: sudo systemctl enable fan.service
 
 If you want to make sure it is running, write: ps aux | grep "Raspberry-fan"
 
